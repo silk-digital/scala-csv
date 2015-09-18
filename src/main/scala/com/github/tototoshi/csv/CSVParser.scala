@@ -36,21 +36,66 @@ object CSVParser {
     def parseWithState(toParse: List[Char], state: State = OutOfQuotes, field: String = "", parsed: List[String] = List()): Option[List[String]] = (toParse, state) match {
       case (Nil, InQuotes) => None
       case (Nil, OutOfQuotes) => Some(parsed.reverse)
-      case (`escapeChar` :: `quoteChar` :: cs, InQuotes) => parseWithState(cs, InQuotes, field + quoteChar, parsed)
-      case (`escapeChar` :: other :: cs, InQuotes) if escapeChar == quoteChar && ("\n\u2028\u2029\u0085" + delimiter).contains(other) => parseWithState(cs, OutOfQuotes, "", field :: parsed)
-      case (`escapeChar` :: cs, InQuotes) if quoteChar == escapeChar => throw new MalformedCSVException("quote ended before end of cell: " + input)
-      case (`escapeChar` :: other :: cs, InQuotes) => parseWithState(cs, InQuotes, field + escapeChar + other, parsed)
-      case (`escapeChar` :: Nil, _) => throw new MalformedCSVException("escape char at end of line: " + input)
-      case (`quoteChar` :: cs, OutOfQuotes) if field.isEmpty => parseWithState(cs, InQuotes, field, parsed)
-      case (`quoteChar` :: cs, OutOfQuotes) => throw new MalformedCSVException("quote start after start of cell: " + input)
-      case (`quoteChar` :: Nil, InQuotes) => parseWithState(Nil, OutOfQuotes, field, parsed)
-      case (`quoteChar` :: other :: cs, InQuotes) if ("\n\u2028\u2029\u0085" + delimiter).contains(other) => parseWithState(cs, OutOfQuotes, "", field :: parsed)
-      case (`quoteChar` :: cs, InQuotes) => throw new MalformedCSVException("quote ended before end of cell: " + input)
-      case (`delimiter` :: cs, InQuotes) => parseWithState(cs, InQuotes, field + delimiter, parsed)
-      case (`delimiter` :: cs, OutOfQuotes) => parseWithState(cs, OutOfQuotes, "", field :: parsed)
-      case (c :: cs, OutOfQuotes) if "\n\u2028\u2029\u0085".contains(c) => parseWithState(cs, OutOfQuotes, "", field :: parsed)
-      case ('\r' :: '\n' :: cs, OutOfQuotes) => parseWithState(cs, OutOfQuotes, "", field :: parsed)
-      case (c :: cs, _) => parseWithState(cs, state, field + c, parsed)
+      case (`escapeChar` :: `quoteChar` :: cs, InQuotes) => {
+        //        println("escape + quote")
+        parseWithState(cs, InQuotes, field + quoteChar, parsed)
+      }
+      case (`escapeChar` :: other :: cs, InQuotes) if escapeChar == quoteChar && ("\n\u2028\u2029\u0085" + delimiter).contains(other) => {
+        //        println("escape=quote + other ")
+        parseWithState(cs, OutOfQuotes, "", field :: parsed)
+      }
+      case (`escapeChar` :: cs, InQuotes) if quoteChar == escapeChar => {
+        //        println("escape=quote + nil")
+        throw new MalformedCSVException("quote ended before end of cell: " + cs)
+      }
+      case (`escapeChar` :: other :: cs, InQuotes) => {
+        //        println("escape + other")
+        parseWithState(cs, InQuotes, field + escapeChar + other, parsed)
+      }
+      case (`escapeChar` :: Nil, _) => {
+        //        println("escape + nil")
+        throw new MalformedCSVException("escape char at end of line: " + input)
+      }
+      case (`quoteChar` :: cs, OutOfQuotes) if field.isEmpty => {
+        //        println("quote at start of field")
+        parseWithState(cs, InQuotes, field, parsed)
+      }
+      case (`quoteChar` :: cs, OutOfQuotes) => {
+        //        println("quote in middle of field")
+        throw new MalformedCSVException("quote start after start of cell: " + input)
+      }
+      case (`quoteChar` :: Nil, InQuotes) => {
+        //        println("quote at end of list")
+        parseWithState(Nil, OutOfQuotes, field, parsed)
+      }
+      case (`quoteChar` :: other :: cs, InQuotes) if ("\n\u2028\u2029\u0085" + delimiter).contains(other) => {
+        //        println("quote at end of cell")
+        parseWithState(cs, OutOfQuotes, "", field :: parsed)
+      }
+      case (`quoteChar` :: cs, InQuotes) => {
+        //        println("quote in middle of cell")
+        throw new MalformedCSVException("quote ended before end of cell: " + input)
+      }
+      case (`delimiter` :: cs, InQuotes) => {
+        //        println("delimiter in quotes")
+        parseWithState(cs, InQuotes, field + delimiter, parsed)
+      }
+      case (`delimiter` :: cs, OutOfQuotes) => {
+        //        println("delimiter out of quotes")
+        parseWithState(cs, OutOfQuotes, "", field :: parsed)
+      }
+      case (c :: cs, OutOfQuotes) if "\n\u2028\u2029\u0085".contains(c) => {
+        //        println("endOfLine out of quotes")
+        parseWithState(cs, OutOfQuotes, "", field :: parsed)
+      }
+      case ('\r' :: '\n' :: cs, OutOfQuotes) => {
+        //        println("Windows end of line out of quotes")
+        parseWithState(cs, OutOfQuotes, "", field :: parsed)
+      }
+      case (c :: cs, _) => {
+        //        println("normal character")
+        parseWithState(cs, state, field + c, parsed)
+      }
     }
 
     parseWithState(input.toList)
