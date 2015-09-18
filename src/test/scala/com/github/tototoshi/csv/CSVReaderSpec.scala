@@ -262,6 +262,21 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
       }
     }
 
+    it("should not crash on import") {
+      using(CSVReader.open("src/test/resources/104-5-referentiel (1).csv", "ISO-8859-1")(new DefaultCSVFormat {
+        override val delimiter = ';'
+        override val escapeChar = '\\'
+        override val quoteChar = '"'
+      })) { reader =>
+        reader.all().size should be(307)
+      }
+    }
+
+    it("should do well on triple quotes") {
+      using(CSVReader.open("src/test/resources/quote-escape-quote.csv")) { reader =>
+        reader.all().flatten.mkString should be("field1field2field3 says, \"escaped with quote\"")
+      }
+    }
     describe("#iteratorWithHeaders") {
       describe("When the file is empty") {
         it("returns an empty list") {

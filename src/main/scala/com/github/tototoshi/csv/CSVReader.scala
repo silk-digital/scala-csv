@@ -39,8 +39,9 @@ class CSVReader protected (private val lineReader: LineReader)(implicit format: 
         }
       } else {
         val line = leftOver.getOrElse("") + nextLine
-        parser.parseLine(line) match {
-          case None => parseNext(lineReader, Some(line))
+        val lineWithReturn = if (line.endsWith("\n")) line else line + '\n'
+        parser.parseLine(lineWithReturn) match {
+          case None => parseNext(lineReader, Some(lineWithReturn))
           case result => result
         }
       }
