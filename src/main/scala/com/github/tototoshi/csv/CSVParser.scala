@@ -22,7 +22,6 @@ object CSVParser {
   private type State = Int
   private final val OutOfQuotes = 0
   private final val InQuotes = 1
-  private final val End = 2
 
   /**
    * {{{
@@ -35,10 +34,9 @@ object CSVParser {
    */
   def parse(input: String, escapeChar: Char, delimiter: Char, quoteChar: Char): Option[List[String]] = {
     def parseWithState(toParse: List[Char], state: State = OutOfQuotes, field: String = "", parsed: List[String] = List()): Option[List[String]] = (toParse, state) match {
-      case (Nil, End) => Some(parsed.reverse)
-      case (_, End) => throw new MalformedCSVException("line ended before end of line: " + input)
-      case (Nil, _) => None
-      case (`escapeChar` :: next :: cs, state) => parseWithState(cs, state, field + next, parsed)
+      case (Nil, InQuotes) => None
+      case (Nil, OutOfQuotes) => Some(parsed.reverse)
+      case (`escapeChar` :: next :: cs, InQuotes) => parseWithState(cs, InQuotes, field + next, parsed)
       case (`escapeChar` :: Nil, _) => throw new MalformedCSVException("escape char at end of line: " + input)
       case (`quoteChar` :: cs, OutOfQuotes) if field.isEmpty => parseWithState(cs, InQuotes, field, parsed)
       case (`quoteChar` :: cs, OutOfQuotes) => throw new MalformedCSVException("quote start after start of cell: " + input)
@@ -49,8 +47,8 @@ object CSVParser {
         parseWithState(cs, InQuotes, field + delimiter, parsed)
       }
       case (`delimiter` :: cs, OutOfQuotes) => parseWithState(cs, OutOfQuotes, "", field :: parsed)
-      case (c :: cs, OutOfQuotes) if "\n\u2028\u2029\u0085".contains(c) => parseWithState(cs, End, "", field :: parsed)
-      case ('\r' :: '\n' :: cs, OutOfQuotes) => parseWithState(cs, End, "", field :: parsed)
+      case (c :: cs, OutOfQuotes) if "\n\u2028\u2029\u0085".contains(c) => parseWithState(cs, OutOfQuotes, "", field :: parsed)
+      case ('\r' :: '\n' :: cs, OutOfQuotes) => parseWithState(cs, OutOfQuotes, "", field :: parsed)
       case (c :: cs, state) => parseWithState(cs, state, field + c, parsed)
     }
 

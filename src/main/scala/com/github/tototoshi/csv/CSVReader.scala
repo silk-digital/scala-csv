@@ -40,14 +40,11 @@ class CSVReader protected (private val lineReader: LineReader)(implicit format: 
       } else {
         val line = leftOver.getOrElse("") + nextLine
         parser.parseLine(line) match {
-          case None => {
-            parseNext(lineReader, Some(line))
-          }
+          case None => parseNext(lineReader, Some(line))
           case result => result
         }
       }
     }
-
     parseNext(lineReader)
   }
 
