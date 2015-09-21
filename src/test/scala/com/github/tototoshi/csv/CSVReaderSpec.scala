@@ -263,12 +263,28 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
     }
 
     it("should not crash on import") {
-      using(CSVReader.open("src/test/resources/104-5-referentiel (1).csv", "ISO-8859-1")(new DefaultCSVFormat {
-        override val delimiter = ';'
-        override val escapeChar = '\\'
+      using(CSVReader.open("src/test/resources/FichierCatalogueDetailFranceShort.csv", "ISO-8859-15")(new DefaultCSVFormat {
+        override val delimiter = '['
+        override val escapeChar = '"'
         override val quoteChar = '"'
+        override val lineTerminator = "\\r\\n"
+        override val quoting = QUOTE_MINIMAL
+        override val treatEmptyLineAsNil = false
       })) { reader =>
-        reader.all().size should be(307)
+        reader.all().size should be(2)
+      }
+    }
+//
+  it("should not crash on large import") {
+      using(CSVReader.open("src/test/resources/FichierCatalogueDetailFrance.csv", "ISO-8859-15")(new DefaultCSVFormat {
+        override val delimiter = '['
+        override val escapeChar = '"'
+        override val quoteChar = '"'
+        override val lineTerminator = "\\r\\n"
+        override val quoting = QUOTE_MINIMAL
+        override val treatEmptyLineAsNil = false
+      })) { reader =>
+        reader.all().size should be(2637)
       }
     }
 
