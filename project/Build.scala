@@ -7,7 +7,7 @@ object ScalaCSVProject extends Build {
   lazy val root = Project (
     id = "scala-csv",
     base = file ("."),
-    settings = Defaults.defaultSettings ++ Seq (
+    settings =  Seq (
       name := "scala-csv",
       version := "1.3.0-SNAPSHOT",
       scalaVersion := "2.11.6",
