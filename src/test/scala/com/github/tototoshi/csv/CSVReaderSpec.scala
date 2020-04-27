@@ -14,7 +14,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("should be constructed with java.io.File") {
       var res: List[String] = Nil
-      using(CSVReader.open(new File("src/test/resources/simple.csv"))) { reader =>
+      using(CSVReader.open(new File("src/test/resources/simple.com.github.tototoshi.csv"))) { reader =>
         reader foreach { fields =>
           res = res ++ fields
         }
@@ -24,7 +24,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("should be constructed with filename") {
       var res: List[String] = Nil
-      using(CSVReader.open("src/test/resources/simple.csv")) { reader =>
+      using(CSVReader.open("src/test/resources/simple.com.github.tototoshi.csv")) { reader =>
         reader foreach { fields =>
           res = res ++ fields
         }
@@ -38,14 +38,14 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
         override val quoteChar: Char = '$'
       }
 
-      using(CSVReader.open("src/test/resources/hash-separated-dollar-quote.csv")(format)) { reader =>
+      using(CSVReader.open("src/test/resources/hash-separated-dollar-quote.com.github.tototoshi.csv")(format)) { reader =>
         {
           val map = reader.allWithHeaders()
           map(0)("Foo ") should be("a")
         }
       }
 
-      using(CSVReader.open("src/test/resources/hash-separated-dollar-quote.csv", "utf-8")(format)) { reader =>
+      using(CSVReader.open("src/test/resources/hash-separated-dollar-quote.com.github.tototoshi.csv", "utf-8")(format)) { reader =>
         val map = reader.allWithHeaders()
         map(0)("Foo ") should be("a")
       }
@@ -53,7 +53,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("should throws UnsupportedEncodingException when unsupprted encoding is specified") {
       intercept[UnsupportedEncodingException] {
-        using(CSVReader.open("src/test/resources/hash-separated-dollar-quote.csv", "unknown")) { reader =>
+        using(CSVReader.open("src/test/resources/hash-separated-dollar-quote.com.github.tototoshi.csv", "unknown")) { reader =>
           val map = reader.allWithHeaders()
           map(0)("Foo ") should be("a")
         }
@@ -61,7 +61,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
     }
 
     it("should be able to read an empty line") {
-      using(CSVReader.open("src/test/resources/has-empty-line.csv", "utf-8")) { reader =>
+      using(CSVReader.open("src/test/resources/has-empty-line.com.github.tototoshi.csv", "utf-8")) { reader =>
         val lines = reader.all()
         lines(1) should be(List(""))
       }
@@ -69,7 +69,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
       val format = new DefaultCSVFormat {
         override val treatEmptyLineAsNil = true
       }
-      using(CSVReader.open("src/test/resources/has-empty-line.csv", "utf-8")(format)) { reader =>
+      using(CSVReader.open("src/test/resources/has-empty-line.com.github.tototoshi.csv", "utf-8")(format)) { reader =>
         val lines = reader.all()
         lines(1) should be(Nil)
       }
@@ -77,7 +77,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("read simple CSV from file") {
       var res: List[String] = Nil
-      using(CSVReader.open(new FileReader("src/test/resources/simple.csv"))) { reader =>
+      using(CSVReader.open(new FileReader("src/test/resources/simple.com.github.tototoshi.csv"))) { reader =>
         reader foreach { fields =>
           res = res ++ fields
         }
@@ -98,7 +98,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("issue #22") {
       var res: List[String] = Nil
-      using(CSVReader.open("src/test/resources/issue22.csv")) { reader =>
+      using(CSVReader.open("src/test/resources/issue22.com.github.tototoshi.csv")) { reader =>
         reader foreach { fields =>
           res = res ++ fields
         }
@@ -107,7 +107,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("issue #32") {
       var res: List[String] = Nil
-      using(CSVReader.open("src/test/resources/issue32.csv")(new DefaultCSVFormat {
+      using(CSVReader.open("src/test/resources/issue32.com.github.tototoshi.csv")(new DefaultCSVFormat {
         override val escapeChar: Char = '\\'
       })) { reader =>
         reader foreach { fields =>
@@ -116,12 +116,12 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
       }
     }
 
-    it("should read csv file whose escape char is backslash") {
+    it("should read com.github.tototoshi.csv file whose escape char is backslash") {
       var res: List[String] = Nil
       implicit val format = new DefaultCSVFormat {
         override val escapeChar: Char = '\\'
       }
-      using(CSVReader.open("src/test/resources/backslash-escape.csv")(format)) { reader =>
+      using(CSVReader.open("src/test/resources/backslash-escape.com.github.tototoshi.csv")(format)) { reader =>
         reader foreach { fields =>
           res = res ++ fields
         }
@@ -131,7 +131,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("read simple CSV file with empty quoted fields") {
       var res: List[String] = Nil
-      using(CSVReader.open("src/test/resources/issue30.csv")) { reader =>
+      using(CSVReader.open("src/test/resources/issue30.com.github.tototoshi.csv")) { reader =>
         reader foreach { fields =>
           res = res ++ fields
         }
@@ -141,7 +141,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("should be throw exception against malformed input") {
       intercept[MalformedCSVException] {
-        using(CSVReader.open(new FileReader("src/test/resources/malformed.csv"))) { reader =>
+        using(CSVReader.open(new FileReader("src/test/resources/malformed.com.github.tototoshi.csv"))) { reader =>
           reader.all()
         }
       }
@@ -149,7 +149,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("read CSV file including escaped fields") {
       var res: List[String] = Nil
-      using(CSVReader.open(new FileReader("src/test/resources/escape.csv"))) { reader =>
+      using(CSVReader.open(new FileReader("src/test/resources/escape.com.github.tototoshi.csv"))) { reader =>
         reader foreach { fields =>
           res = res ++ fields
         }
@@ -159,7 +159,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
     it("should correctly parse fields with line breaks enclosed in double quotes") {
       var res: List[Seq[String]] = Nil
-      using(CSVReader.open(new FileReader("src/test/resources/line-breaks.csv"))) { reader =>
+      using(CSVReader.open(new FileReader("src/test/resources/line-breaks.com.github.tototoshi.csv"))) { reader =>
         reader foreach { fields =>
           res = res :+ fields
         }
@@ -181,21 +181,21 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
     }
 
     it("has #toStream") {
-      using(CSVReader.open(new File("src/test/resources/simple.csv"))) { reader =>
+      using(CSVReader.open(new File("src/test/resources/simple.com.github.tototoshi.csv"))) { reader =>
         val stream = reader.toStream
         stream.drop(1).head.mkString should be("def")
       }
     }
 
     it("has #readNext") {
-      using(CSVReader.open(new File("src/test/resources/simple.csv"))) { reader =>
+      using(CSVReader.open(new File("src/test/resources/simple.com.github.tototoshi.csv"))) { reader =>
         reader.readNext()
         reader.readNext.get.mkString should be("def")
       }
     }
 
     it("has #all") {
-      using(CSVReader.open(new FileReader("src/test/resources/simple.csv"))) { reader =>
+      using(CSVReader.open(new FileReader("src/test/resources/simple.com.github.tototoshi.csv"))) { reader =>
         reader.all should be(List(List("a", "b", "c"), List("d", "e", "f")))
       }
     }
@@ -203,7 +203,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
     describe("iterator fetched from #iterator") {
 
       it("has #hasNext") {
-        using(CSVReader.open("src/test/resources/simple.csv")) { reader =>
+        using(CSVReader.open("src/test/resources/simple.com.github.tototoshi.csv")) { reader =>
           val it = reader.iterator
           it.hasNext should be(true)
           it.hasNext should be(true)
@@ -215,14 +215,14 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
       describe("#next") {
         it("should return the next line") {
-          using(CSVReader.open("src/test/resources/simple.csv")) { reader =>
+          using(CSVReader.open("src/test/resources/simple.com.github.tototoshi.csv")) { reader =>
             val it = reader.iterator
             it.next should be(List("a", "b", "c"))
             it.next should be(List("d", "e", "f"))
           }
         }
         it("should throw NoSuchElementException") {
-          using(CSVReader.open("src/test/resources/simple.csv")) { reader =>
+          using(CSVReader.open("src/test/resources/simple.com.github.tototoshi.csv")) { reader =>
             val it = reader.iterator
             it.next
             it.next
@@ -235,7 +235,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
 
       it("iterate all lines") {
         var lineCount = 0
-        using(CSVReader.open("src/test/resources/simple.csv")) { reader =>
+        using(CSVReader.open("src/test/resources/simple.com.github.tototoshi.csv")) { reader =>
           val it = reader.iterator
           it.foreach { line => lineCount += 1 }
         }
@@ -263,7 +263,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
     }
 
     it("should not crash on import") {
-      using(CSVReader.open("src/test/resources/FichierCatalogueDetailFranceShort.csv", "ISO-8859-15")(new DefaultCSVFormat {
+      using(CSVReader.open("src/test/resources/FichierCatalogueDetailFranceShort.com.github.tototoshi.csv", "ISO-8859-15")(new DefaultCSVFormat {
         override val delimiter = '['
         override val escapeChar = '"'
         override val quoteChar = '"'
@@ -276,7 +276,7 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
     }
 //
   it("should not crash on large import") {
-      using(CSVReader.open("src/test/resources/FichierCatalogueDetailFrance.csv", "ISO-8859-15")(new DefaultCSVFormat {
+      using(CSVReader.open("src/test/resources/FichierCatalogueDetailFrance.com.github.tototoshi.csv", "ISO-8859-15")(new DefaultCSVFormat {
         override val delimiter = '['
         override val escapeChar = '"'
         override val quoteChar = '"'
@@ -289,28 +289,28 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
     }
 
     it("should do well on triple quotes") {
-      using(CSVReader.open("src/test/resources/quote-escape-quote.csv")) { reader =>
+      using(CSVReader.open("src/test/resources/quote-escape-quote.com.github.tototoshi.csv")) { reader =>
         reader.all().flatten.mkString should be("field1field2field3 says, \"escaped with quote\"")
       }
     }
     describe("#iteratorWithHeaders") {
       describe("When the file is empty") {
         it("returns an empty list") {
-          using(CSVReader.open(new FileReader("src/test/resources/empty.csv"))) { reader =>
+          using(CSVReader.open(new FileReader("src/test/resources/empty.com.github.tototoshi.csv"))) { reader =>
             reader.iteratorWithHeaders should be('empty)
           }
         }
       }
       describe("When the file has only one line") {
         it("returns an empty list") {
-          using(CSVReader.open(new FileReader("src/test/resources/only-header.csv"))) { reader =>
+          using(CSVReader.open(new FileReader("src/test/resources/only-header.com.github.tototoshi.csv"))) { reader =>
             reader.iteratorWithHeaders should be('empty)
           }
         }
       }
       describe("When the file has many lines") {
         it("returns a List of Map[String, String]") {
-          using(CSVReader.open(new FileReader("src/test/resources/with-headers.csv"))) { reader =>
+          using(CSVReader.open(new FileReader("src/test/resources/with-headers.com.github.tototoshi.csv"))) { reader =>
             val iterator = reader.iteratorWithHeaders
             iterator.next() should be(Map("Foo" -> "a", "Bar" -> "b", "Baz" -> "c"))
             iterator.next() should be(Map("Foo" -> "d", "Bar" -> "e", "Baz" -> "f"))
@@ -322,21 +322,21 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
     describe("#allHeaders") {
       describe("When the file is empty") {
         it("returns an empty list") {
-          using(CSVReader.open(new FileReader("src/test/resources/empty.csv"))) { reader =>
+          using(CSVReader.open(new FileReader("src/test/resources/empty.com.github.tototoshi.csv"))) { reader =>
             reader.allWithHeaders should be('empty)
           }
         }
       }
       describe("When the file has only one line") {
         it("returns an empty list") {
-          using(CSVReader.open(new FileReader("src/test/resources/only-header.csv"))) { reader =>
+          using(CSVReader.open(new FileReader("src/test/resources/only-header.com.github.tototoshi.csv"))) { reader =>
             reader.allWithHeaders should be('empty)
           }
         }
       }
       describe("When the file has many lines") {
         it("returns a List of Map[String, String]") {
-          using(CSVReader.open(new FileReader("src/test/resources/with-headers.csv"))) { reader =>
+          using(CSVReader.open(new FileReader("src/test/resources/with-headers.com.github.tototoshi.csv"))) { reader =>
             reader.allWithHeaders should be(List(Map("Foo" -> "a", "Bar" -> "b", "Baz" -> "c"), Map("Foo" -> "d", "Bar" -> "e", "Baz" -> "f")))
           }
         }
@@ -346,21 +346,21 @@ class CSVReaderSpec extends FunSpec with ShouldMatchers with Using {
     describe("#allOrderedHeaders") {
       describe("When the file is empty") {
         it("returns an empty list") {
-          using(CSVReader.open(new FileReader("src/test/resources/empty.csv"))) { reader =>
+          using(CSVReader.open(new FileReader("src/test/resources/empty.com.github.tototoshi.csv"))) { reader =>
             reader.allWithOrderedHeaders() should be((Nil, Nil))
           }
         }
       }
       describe("When the file has only header line") {
         it("returns only header names") {
-          using(CSVReader.open(new FileReader("src/test/resources/only-header.csv"))) { reader =>
+          using(CSVReader.open(new FileReader("src/test/resources/only-header.com.github.tototoshi.csv"))) { reader =>
             reader.allWithOrderedHeaders should be((List("foo", "bar"), Nil))
           }
         }
       }
       describe("When the file has many headers and many lines") {
         it("returns header names in order and data") {
-          using(CSVReader.open(new FileReader("src/test/resources/with-headers.csv"))) { reader =>
+          using(CSVReader.open(new FileReader("src/test/resources/with-headers.com.github.tototoshi.csv"))) { reader =>
             val result = reader.allWithOrderedHeaders()
             result._1 should be(List("Foo", "Bar", "Baz"))
             result._2 should be(List(Map("Foo" -> "a", "Bar" -> "b", "Baz" -> "c"), Map("Foo" -> "d", "Bar" -> "e", "Baz" -> "f")))

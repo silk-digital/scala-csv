@@ -25,10 +25,10 @@ object CSVParser {
 
   /**
    * {{{
-   * scala> com.github.tototoshi.csv.CSVParser.parse("a,b,c", '\\', ',', '"')
+   * scala> com.github.tototoshi.com.github.tototoshi.csv.CSVParser.parse("a,b,c", '\\', ',', '"')
    * res0: Option[List[String]] = Some(List(a, b, c))
    *
-   * scala> com.github.tototoshi.csv.CSVParser.parse("\"a\",\"b\",\"c\"", '\\', ',', '"')
+   * scala> com.github.tototoshi.com.github.tototoshi.csv.CSVParser.parse("\"a\",\"b\",\"c\"", '\\', ',', '"')
    * res1: Option[List[String]] = Some(List(a, b, c))
    * }}}
    */

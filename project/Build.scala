@@ -5,10 +5,10 @@ import com.typesafe.sbt.SbtScalariform.scalariformSettings
 object ScalaCSVProject extends Build {
 
   lazy val root = Project (
-    id = "scala-csv",
+    id = "scala-com.github.tototoshi.csv",
     base = file ("."),
     settings =  Seq (
-      name := "scala-csv",
+      name := "scala-com.github.tototoshi.csv",
       version := "1.3.0-SNAPSHOT",
       scalaVersion := "2.11.6",
       crossScalaVersions := Seq("2.11.6", "2.10.4"),
@@ -27,7 +27,7 @@ object ScalaCSVProject extends Build {
       },
       javacOptions in compile ++= Seq("-target", "6", "-source", "6", "-Xlint"),
       initialCommands := """
-                           |import com.github.tototoshi.csv._
+                           |import com.github.tototoshi.com.github.tototoshi.csv._
                          """.stripMargin,
       publishMavenStyle := true,
       publishTo <<= version { (v: String) =>
